@@ -4,8 +4,8 @@ const FILES_TO_CACHE = [
   '/meu-pwa/index.html',
   '/meu-pwa/manifest.json',
   '/meu-pwa/icons/icon-192.png',
-  '/meu-pwa/icons/icon-512.png'
-  // Adicione outros arquivos se necessário, como CSS ou JS
+  '/meu-pwa/icons/icon-512.png',
+  // Adicione outros arquivos importantes como CSS, JS ou fontes
 ];
 
 self.addEventListener('install', (evt) => {
@@ -35,13 +35,17 @@ self.addEventListener('activate', (evt) => {
 });
 
 self.addEventListener('fetch', (evt) => {
-  if (evt.request.mode !== 'navigate') return;
-
-  evt.respondWith(
-    fetch(evt.request).catch(() =>
-      caches.open(CACHE_NAME).then(cache =>
-        cache.match('/meu-pwa/index.html')
-      )
-    )
-  );
+  if (evt.request.mode === 'navigate') {
+    evt.respondWith(
+      fetch(evt.request).catch(() => {
+        return caches.match('/meu-pwa/index.html');
+      })
+    );
+  } else {
+    evt.respondWith(
+      caches.match(evt.request).then((response) => {
+        return response || fetch(evt.request);
+      })
+    );
+  }
 });
