@@ -1,11 +1,11 @@
 const CACHE_NAME = 'financaspro3-cache-v1';
 const FILES_TO_CACHE = [
-  '/',
-  './index.html',
-  './manifest.json',
-  './icons/icon-192.png',
-  './icons/icon-512.png'
-  // Se tiver arquivos CSS, JS externos, coloque aqui também
+  '/meu-pwa/',
+  '/meu-pwa/index.html',
+  '/meu-pwa/manifest.json',
+  '/meu-pwa/icons/icon-192.png',
+  '/meu-pwa/icons/icon-512.png'
+  // Adicione outros arquivos se necessário, como CSS ou JS
 ];
 
 self.addEventListener('install', (evt) => {
@@ -35,13 +35,13 @@ self.addEventListener('activate', (evt) => {
 });
 
 self.addEventListener('fetch', (evt) => {
-  if (evt.request.mode !== 'navigate') {
-    return;
-  }
+  if (evt.request.mode !== 'navigate') return;
+
   evt.respondWith(
     fetch(evt.request).catch(() =>
-      caches.open(CACHE_NAME)
-        .then(cache => cache.match('./index.html'))
+      caches.open(CACHE_NAME).then(cache =>
+        cache.match('/meu-pwa/index.html')
+      )
     )
   );
 });
