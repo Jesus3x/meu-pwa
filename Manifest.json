@@ -1,24 +1,26 @@
-  {
-  "id": "meu-pwa",
+{
+  "id": "/meu-pwa/",
   "name": "Finanças Pro 3",
   "short_name": "Finanças",
   "description": "Aplicativo de controle financeiro pessoal.",
-  "start_url": "/",
-  "scope": "./",
+  "start_url": "/meu-pwa/",
+  "scope": "/meu-pwa/",
   "display": "standalone",
+  "orientation": "portrait",
   "background_color": "#6a11cb",
   "theme_color": "#2575fc",
-  "orientation": "portrait",
+  "lang": "pt-BR",
+  "prefer_related_applications": false,
   "icons": [
     {
-      "src": "icon-192x192.png",
+      "src": "/meu-pwa/icons/icon-192.png",
       "sizes": "192x192",
-      "type": "any"
+      "type": "image/png"
     },
     {
-      "src": "icon-512x512.png",
+      "src": "/meu-pwa/icons/icon-512.png",
       "sizes": "512x512",
-      "type": "any"
+      "type": "image/png"
     }
   ]
 }
