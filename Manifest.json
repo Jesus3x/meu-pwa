@@ -1,4 +1,5 @@
 {
+  "id": "/meu-pwa/",
   "name": "Finanças Pro 3 nós três",
   "short_name": "Finanças",
   "description": "Aplicativo de controle financeiro pessoal.",
@@ -20,5 +21,6 @@
       "sizes": "512x512",
       "type": "image/png"
     }
-  ]
+  ],
+  "prefer_related_applications": false
 }
