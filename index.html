@@ -1,24 +1,20 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Finanças Pro 3 nós 3</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Finanças Pro 3</title>
 
-  <!-- Manifesto da PWA -->
-  <link rel="manifest" href="/meu-pwa/manifest.json" />
+  <!-- Adicionando o manifest -->
+  <link rel="manifest" href="./manifest.json">
+  
+  <!-- Cor do tema do PWA -->
+  <meta name="theme-color" content="#2575fc">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
-  <!-- Ícone da aba do navegador -->
-  <link rel="icon" href="/meu-pwa/icons/icon-192.png" type="image/png" />
-
-  <!-- Ícones Apple Touch para instalação no iOS -->
-  <link rel="apple-touch-icon" href="/meu-pwa/icons/icon-192.png" />
-  <link rel="apple-touch-icon" sizes="512x512" href="/meu-pwa/icons/icon-512.png" />
-
-  <!-- Cor da barra de status (tema) -->
-  <meta name="theme-color" content="#2575fc" />
-</head>
-body {
+  <style>
+    body {
       margin: 0;
       font-family: Arial, sans-serif;
       background: linear-gradient(135deg, #6a11cb, #2575fc);
@@ -27,8 +23,8 @@ body {
     }
 
     .container {
-      max-width: 1000px;
-      margin: 100px auto;
+      max-width: 500px;
+      margin: 50px auto;
       background: rgba(0, 0, 0, 0.4);
       padding: 20px;
       border-radius: 15px;
@@ -54,7 +50,7 @@ body {
 
     table {
       width: 100%;
-      margin-top: 100px;
+      margin-top: 20px;
       background: rgba(255,255,255,0.1);
       border-collapse: collapse;
     }
@@ -87,7 +83,7 @@ body {
     @media (max-width: 600px) {
       .container {
         width: 90%;
-        margin: 100px auto;
+        margin: 20px auto;
       }
     }
   </style>
@@ -97,7 +93,7 @@ body {
 
   <!-- Tela de Login -->
   <div class="container login" id="login">
-    <h2>Finanças Pro 3 nós 3</h2>
+    <h2>Finanças Pro 3</h2>
     <input type="text" id="loginUser" placeholder="Usuário" aria-label="Usuário">
     <input type="password" id="loginPass" placeholder="Senha" aria-label="Senha">
     <button onclick="entrar()" aria-label="Entrar">Entrar</button>
@@ -107,7 +103,7 @@ body {
 
   <!-- Tela Principal (após login) -->
   <div class="container" id="app" style="display:none;">
-    <h2>Finanças Pro 3 nós 3</h2>
+    <h2>Finanças Pro 3</h2>
     <p>Bem-vindo, <span id="currentUser"></span> | Saldo: R$ <span id="saldo">0.00</span></p>
 
     <input type="date" id="data" aria-label="Data">
@@ -130,7 +126,7 @@ body {
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/meu-pwa/service-worker.js')
+        navigator.serviceWorker.register('./service-worker.js')
           .then(reg => console.log('✅ Service Worker registrado:', reg.scope))
           .catch(err => console.error('❌ Erro ao registrar Service Worker:', err));
       });
@@ -309,15 +305,7 @@ body {
       });
       doc.save('movimentacoes.pdf');
     }
-      
-
-  <!-- Registro do Service Worker -->
-  <script>
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('/meu-pwa/service-worker.js')
-        .then(() => console.log('Service Worker registrado!'))
-        .catch(err => console.error('Erro no registro do Service Worker:', err));
-    }
   </script>
 </body>
+
 </html>
