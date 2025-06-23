@@ -1,56 +1,51 @@
-const CACHE_NAME = 'financaspro3-cache-v1'; // Nome do cache
+const CACHE_NAME = 'financaspro3-cache-v1';
 const FILES_TO_CACHE = [
-  '/meu-pwa/', // Página principal
-  '/meu-pwa/index.html', // HTML
-  '/meu-pwa/manifest.json', // Manifesto
-  '/meu-pwa/icons/icon-192.png', // Ícone
-  '/meu-pwa/icons/icon-512.png', // Ícone maior
-  // Adicione outros arquivos importantes como CSS, JS ou fontes
+  '/meu-pwa/',
+  '/meu-pwa/index.html',
+  '/meu-pwa/manifest.json',
+  '/meu-pwa/icons/icon-192.png',
+  '/meu-pwa/icons/icon-512.png',
+  // Adicione aqui seus CSS, JS e outros arquivos estáticos essenciais
 ];
 
-// Instalação do Service Worker - Adiciona os arquivos ao cache
-self.addEventListener('install', (evt) => {
-  evt.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => {
-      console.log('[ServiceWorker] Caching app shell');
-      return cache.addAll(FILES_TO_CACHE);
-    })
+// Instalação: cache dos arquivos
+self.addEventListener('install', (event) => {
+  event.waitUntil(
+    caches.open(CACHE_NAME)
+      .then(cache => {
+        console.log('[ServiceWorker] Cacheando arquivos...');
+        return cache.addAll(FILES_TO_CACHE);
+      })
   );
-  self.skipWaiting(); // Força o SW a ser ativado imediatamente
+  self.skipWaiting();
 });
 
-// Ativação do Service Worker - Limpeza de caches antigos
-self.addEventListener('activate', (evt) => {
-  evt.waitUntil(
-    caches.keys().then((keyList) =>
+// Ativação: remove caches antigos
+self.addEventListener('activate', (event) => {
+  event.waitUntil(
+    caches.keys().then(keys => 
       Promise.all(
-        keyList.map((key) => {
+        keys.map(key => {
           if (key !== CACHE_NAME) {
-            console.log('[ServiceWorker] Removing old cache', key);
-            return caches.delete(key); // Apaga caches antigos
+            console.log('[ServiceWorker] Removendo cache antigo:', key);
+            return caches.delete(key);
           }
         })
       )
     )
   );
-  self.clients.claim(); // Torna o SW ativo imediatamente para todos os clientes
+  self.clients.claim();
 });
 
-// Interceptação das requisições de rede - Cache ou fallback para offline
-self.addEventListener('fetch', (evt) => {
-  if (evt.request.mode === 'navigate') {
-    // Para requisições de navegação (ex.: acesso ao site)
-    evt.respondWith(
-      fetch(evt.request).catch(() => {
-        return caches.match('/meu-pwa/index.html'); // Fallback para a página inicial se estiver offline
-      })
+// Fetch: responde com cache ou rede, fallback para index.html offline
+self.addEventListener('fetch', (event) => {
+  if (event.request.mode === 'navigate') {
+    event.respondWith(
+      fetch(event.request).catch(() => caches.match('/meu-pwa/index.html'))
     );
   } else {
-    // Para outros tipos de requisição, tenta servir do cache ou da rede
-    evt.respondWith(
-      caches.match(evt.request).then((response) => {
-        return response || fetch(evt.request);  // Retorna do cache ou faz a requisição
-      })
+    event.respondWith(
+      caches.match(event.request).then(response => response || fetch(event.request))
     );
   }
 });
