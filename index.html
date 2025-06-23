@@ -1,9 +1,8 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Finanças Pro 3 nós 3</title>
 
   <!-- Manifesto da PWA -->
@@ -17,10 +16,9 @@
   <link rel="apple-touch-icon" sizes="512x512" href="/meu-pwa/icons/icon-512.png" />
 
   <!-- Cor da barra de status (tema) -->
-  <meta name="theme-color" content="#2575fc">
+  <meta name="theme-color" content="#2575fc" />
 </head>
- <style>
-    body {
+<body>
       margin: 0;
       font-family: Arial, sans-serif;
       background: linear-gradient(135deg, #6a11cb, #2575fc);
@@ -311,7 +309,15 @@
       });
       doc.save('movimentacoes.pdf');
     }
+      
+
+  <!-- Registro do Service Worker -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/meu-pwa/service-worker.js')
+        .then(() => console.log('Service Worker registrado!'))
+        .catch(err => console.error('Erro no registro do Service Worker:', err));
+    }
   </script>
 </body>
-
-  </html>
+</html>
