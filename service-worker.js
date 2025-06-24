@@ -3,8 +3,8 @@ const FILES_TO_CACHE = [
   '/meu-pwa/',
   '/meu-pwa/index.html',
   '/meu-pwa/manifest.json',
-  '/meu-pwa/icons/icon-192.png',
-  '/meu-pwa/icons/icon-512.png'
+  '/meu-pwa/icon-192.png',
+  '/meu-pwa/icon-512.png'
 ];
 
 // Instalação: adiciona arquivos ao cache
