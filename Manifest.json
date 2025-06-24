@@ -3,7 +3,7 @@
   "name": "Finanças Pro 3",
   "short_name": "Finanças",
   "description": "Aplicativo de controle financeiro pessoal.",
-  "start_url": "./",
+  "start_url": "/",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
