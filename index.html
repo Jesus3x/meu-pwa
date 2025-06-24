@@ -6,27 +6,25 @@
   <title>Finanças Pro 3 nós 3</title>
 
   <!-- Manifesto da PWA -->
-  <link rel="manifest" href="manifest.json" />
+  <link rel="manifest" href="/meu-pwa/manifest.json" />
 
-  <!-- Ícone da aba do navegador -->
-  <link rel="icon" href="icon-192.png" type="image/png" />
-
-  <!-- Ícones Apple Touch para iOS -->
-  <link rel="apple-touch-icon" href="icon-192.png" />
-  <link rel="apple-touch-icon" sizes="512x512" href="icon-512.png" />
+  <!-- Ícone da aba -->
+  <link rel="icon" href="/meu-pwa/icon-192.png" type="image/png" />
+  <link rel="apple-touch-icon" href="/meu-pwa/icon-192.png" />
+  <link rel="apple-touch-icon" sizes="512x512" href="/meu-pwa/icon-512.png" />
 
   <!-- Cor da barra de status -->
   <meta name="theme-color" content="#2575fc" />
 
-  <!-- Biblioteca jsPDF para gerar PDFs -->
+  <!-- Biblioteca jsPDF para PDF -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
   <style>
     body {
       margin: 0;
       font-family: Arial, sans-serif;
       background: linear-gradient(135deg, #6a11cb, #2575fc);
       color: #fff;
-      transition: background-color 0.3s ease;
     }
 
     .container {
@@ -35,16 +33,6 @@
       background: rgba(0, 0, 0, 0.4);
       padding: 20px;
       border-radius: 15px;
-      animation: slideIn 0.5s ease-out;
-    }
-
-    @keyframes slideIn {
-      from {
-        transform: translateX(-100%);
-      }
-      to {
-        transform: translateX(0);
-      }
     }
 
     input, select, button {
@@ -78,67 +66,59 @@
 
     .error {
       color: #f44336;
-      font-size: 0.9em;
     }
 
     .success {
       color: #4caf50;
-      font-size: 0.9em;
-    }
-
-    /* Responsividade */
-    @media (max-width: 600px) {
-      .container {
-        width: 90%;
-        margin: 20px auto;
-      }
     }
   </style>
 </head>
+
 <body>
 
   <!-- Tela de Login -->
   <div class="container login" id="login">
     <h2>Finanças Pro 3</h2>
-    <input type="text" id="loginUser" placeholder="Usuário" aria-label="Usuário" />
-    <input type="password" id="loginPass" placeholder="Senha" aria-label="Senha" />
-    <button onclick="entrar()" aria-label="Entrar">Entrar</button>
-    <button onclick="cadastrar()" aria-label="Cadastrar">Cadastrar</button>
+    <input type="text" id="loginUser" placeholder="Usuário">
+    <input type="password" id="loginPass" placeholder="Senha">
+    <button onclick="entrar()">Entrar</button>
+    <button onclick="cadastrar()">Cadastrar</button>
     <p id="loginMsg" class="error"></p>
   </div>
 
-  <!-- Tela Principal (após login) -->
+  <!-- Tela Principal -->
   <div class="container" id="app" style="display:none;">
     <h2>Finanças Pro 3</h2>
     <p>Bem-vindo, <span id="currentUser"></span> | Saldo: R$ <span id="saldo">0.00</span></p>
 
-    <input type="date" id="data" aria-label="Data" />
-    <input type="text" id="desc" placeholder="Descrição" aria-label="Descrição" />
-    <input type="number" id="valor" placeholder="Valor" aria-label="Valor" />
-    <select id="tipo" aria-label="Tipo">
+    <input type="date" id="data">
+    <input type="text" id="desc" placeholder="Descrição">
+    <input type="number" id="valor" placeholder="Valor">
+    <select id="tipo">
       <option value="entrada">Entrada</option>
       <option value="saida">Saída</option>
     </select>
-    <button onclick="addMovimentacao()" aria-label="Adicionar Movimentação">Adicionar</button>
-    <button onclick="exportCSV()" aria-label="Exportar CSV">Exportar CSV</button>
-    <button onclick="generatePDF()" aria-label="Gerar PDF">Gerar PDF</button>
-    <button onclick="toggleDarkMode()" aria-label="Modo Escuro">Modo Escuro</button>
-    <button onclick="logout()" aria-label="Sair">Sair</button>
+    <button onclick="addMovimentacao()">Adicionar</button>
+    <button onclick="exportCSV()">Exportar CSV</button>
+    <button onclick="generatePDF()">Gerar PDF</button>
+    <button onclick="toggleDarkMode()">Modo Escuro</button>
+    <button onclick="logout()">Sair</button>
 
     <table id="tabela"></table>
   </div>
 
-  <!-- Script para registrar o Service Worker -->
+  <!-- Service Worker -->
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('service-worker.js')
+        navigator.serviceWorker.register('/meu-pwa/service-worker.js')
           .then(reg => console.log('✅ Service Worker registrado:', reg.scope))
-          .catch(err => console.error('❌ Erro ao registrar Service Worker:', err));
+          .catch(err => console.error('❌ Erro ao registrar SW:', err));
       });
     }
   </script>
 
+  <!-- Lógica do App -->
   <script>
     const { jsPDF } = window.jspdf;
     let movimentacoes = [];
@@ -156,56 +136,50 @@
     function entrar() {
       const user = document.getElementById('loginUser').value;
       const pass = document.getElementById('loginPass').value;
-      if (user && pass) {
-        const saved = localStorage.getItem('user_' + user);
-        if (saved) {
-          const savedPass = JSON.parse(saved).pass;
-          if (savedPass === encode(pass)) {
-            currentUser = user;
-            carregarMovimentacoes();
-            document.getElementById('currentUser').textContent = currentUser;
-            document.getElementById('login').style.display = 'none';
-            document.getElementById('app').style.display = 'block';
-            document.getElementById('loginMsg').textContent = '';
-          } else {
-            document.getElementById('loginMsg').textContent = 'Senha incorreta!';
-          }
+      const saved = localStorage.getItem('user_' + user);
+      if (saved) {
+        const savedPass = JSON.parse(saved).pass;
+        if (savedPass === encode(pass)) {
+          currentUser = user;
+          carregarMovimentacoes();
+          document.getElementById('currentUser').textContent = user;
+          document.getElementById('login').style.display = 'none';
+          document.getElementById('app').style.display = 'block';
+          document.getElementById('loginMsg').textContent = '';
         } else {
-          document.getElementById('loginMsg').textContent = 'Usuário não encontrado! Cadastre-se.';
+          document.getElementById('loginMsg').textContent = 'Senha incorreta!';
         }
+      } else {
+        document.getElementById('loginMsg').textContent = 'Usuário não encontrado!';
       }
     }
 
     function cadastrar() {
       const user = document.getElementById('loginUser').value;
       const pass = document.getElementById('loginPass').value;
-      if (user && pass) {
-        const saved = localStorage.getItem('user_' + user);
-        if (saved) {
-          document.getElementById('loginMsg').textContent = 'Usuário já existe!';
-        } else {
-          localStorage.setItem('user_' + user, JSON.stringify({pass: encode(pass), movs: []}));
-          document.getElementById('loginMsg').textContent = 'Usuário cadastrado com sucesso!';
-          document.getElementById('loginMsg').classList.add('success');
-        }
+      const exists = localStorage.getItem('user_' + user);
+      if (exists) {
+        document.getElementById('loginMsg').textContent = 'Usuário já existe!';
       } else {
-        document.getElementById('loginMsg').textContent = 'Preencha usuário e senha!';
+        localStorage.setItem('user_' + user, JSON.stringify({ pass: encode(pass), movs: [] }));
+        document.getElementById('loginMsg').textContent = 'Usuário cadastrado!';
+        document.getElementById('loginMsg').classList.add('success');
       }
     }
 
     function carregarMovimentacoes() {
-      const userData = JSON.parse(localStorage.getItem('user_' + currentUser));
-      movimentacoes = userData.movs;
+      const data = JSON.parse(localStorage.getItem('user_' + currentUser));
+      movimentacoes = data.movs;
       renderTabela();
       updateSaldo();
     }
 
     function saveMovimentacoes() {
-      const userData = {
+      const data = {
         pass: JSON.parse(localStorage.getItem('user_' + currentUser)).pass,
         movs: movimentacoes
       };
-      localStorage.setItem('user_' + currentUser, JSON.stringify(userData));
+      localStorage.setItem('user_' + currentUser, JSON.stringify(data));
     }
 
     function addMovimentacao() {
@@ -216,19 +190,15 @@
 
       if (data && desc && !isNaN(valor)) {
         if (editIndex !== null) {
-          movimentacoes[editIndex] = {data, desc, valor, tipo};
+          movimentacoes[editIndex] = { data, desc, valor, tipo };
           editIndex = null;
-          alert('Movimentação editada!');
         } else {
-          movimentacoes.push({data, desc, valor, tipo});
-          alert('Movimentação adicionada!');
+          movimentacoes.push({ data, desc, valor, tipo });
         }
         saveMovimentacoes();
         renderTabela();
         updateSaldo();
         limparCampos();
-      } else {
-        alert('Preencha todos os campos!');
       }
     }
 
@@ -241,7 +211,7 @@
 
     function renderTabela() {
       const tabela = document.getElementById('tabela');
-      tabela.innerHTML = '<tr><th>Data</th><th>Descrição</th><th>Valor</th><th>Tipo</th><th>Ações</th></tr>';
+      tabela.innerHTML = '<tr><th>Data</th><th>Descrição</th><th>Valor</th><th>Tipo</th></tr>';
       movimentacoes.forEach((m, index) => {
         tabela.innerHTML += `
           <tr>
@@ -249,55 +219,23 @@
             <td>${m.desc}</td>
             <td>R$ ${m.valor.toFixed(2)}</td>
             <td>${m.tipo}</td>
-            <td>
-              <button onclick="editarMov(${index})" aria-label="Editar Movimentação">Editar</button>
-              <button onclick="excluirMov(${index})" aria-label="Excluir Movimentação">Excluir</button>
-            </td>
           </tr>`;
       });
     }
 
-    function editarMov(index) {
-      const m = movimentacoes[index];
-      document.getElementById('data').value = m.data;
-      document.getElementById('desc').value = m.desc;
-      document.getElementById('valor').value = m.valor;
-      document.getElementById('tipo').value = m.tipo;
-      editIndex = index;
-    }
-
-    function excluirMov(index) {
-      if (confirm('Tem certeza que deseja excluir esta movimentação?')) {
-        movimentacoes.splice(index, 1);
-        saveMovimentacoes();
-        renderTabela();
-        updateSaldo();
-      }
-    }
-
     function updateSaldo() {
-      const saldo = movimentacoes.reduce((acc, mov) => {
-        return mov.tipo === 'entrada' ? acc + mov.valor : acc - mov.valor;
+      const saldo = movimentacoes.reduce((acc, m) => {
+        return m.tipo === 'entrada' ? acc + m.valor : acc - m.valor;
       }, 0);
       document.getElementById('saldo').textContent = saldo.toFixed(2);
     }
 
-    function logout() {
-      currentUser = null;
-      document.getElementById('login').style.display = 'block';
-      document.getElementById('app').style.display = 'none';
-    }
-
-    function toggleDarkMode() {
-      document.body.classList.toggle('dark');
-    }
-
     function exportCSV() {
-      let csvContent = 'Data,Descrição,Valor,Tipo\n';
+      let csv = 'Data,Descrição,Valor,Tipo\n';
       movimentacoes.forEach(m => {
-        csvContent += `${m.data},${m.desc},${m.valor},${m.tipo}\n`;
+        csv += `${m.data},${m.desc},${m.valor},${m.tipo}\n`;
       });
-      const blob = new Blob([csvContent], { type: 'text/csv' });
+      const blob = new Blob([csv], { type: 'text/csv' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
@@ -315,8 +253,17 @@
       });
       doc.save('movimentacoes.pdf');
     }
+
+    function toggleDarkMode() {
+      document.body.classList.toggle('dark');
+    }
+
+    function logout() {
+      currentUser = null;
+      document.getElementById('login').style.display = 'block';
+      document.getElementById('app').style.display = 'none';
+    }
   </script>
 
 </body>
-     </html>
- 
+</html>
