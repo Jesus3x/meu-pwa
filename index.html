@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
@@ -17,7 +17,10 @@
 
   <!-- Cor da barra de status -->
   <meta name="theme-color" content="#2575fc" />
-</head>
+
+  <!-- Biblioteca jsPDF para gerar PDFs -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
   <style>
     body {
       margin: 0;
@@ -93,14 +96,13 @@
     }
   </style>
 </head>
-
 <body>
 
   <!-- Tela de Login -->
   <div class="container login" id="login">
     <h2>Finanças Pro 3</h2>
-    <input type="text" id="loginUser" placeholder="Usuário" aria-label="Usuário">
-    <input type="password" id="loginPass" placeholder="Senha" aria-label="Senha">
+    <input type="text" id="loginUser" placeholder="Usuário" aria-label="Usuário" />
+    <input type="password" id="loginPass" placeholder="Senha" aria-label="Senha" />
     <button onclick="entrar()" aria-label="Entrar">Entrar</button>
     <button onclick="cadastrar()" aria-label="Cadastrar">Cadastrar</button>
     <p id="loginMsg" class="error"></p>
@@ -111,9 +113,9 @@
     <h2>Finanças Pro 3</h2>
     <p>Bem-vindo, <span id="currentUser"></span> | Saldo: R$ <span id="saldo">0.00</span></p>
 
-    <input type="date" id="data" aria-label="Data">
-    <input type="text" id="desc" placeholder="Descrição" aria-label="Descrição">
-    <input type="number" id="valor" placeholder="Valor" aria-label="Valor">
+    <input type="date" id="data" aria-label="Data" />
+    <input type="text" id="desc" placeholder="Descrição" aria-label="Descrição" />
+    <input type="number" id="valor" placeholder="Valor" aria-label="Valor" />
     <select id="tipo" aria-label="Tipo">
       <option value="entrada">Entrada</option>
       <option value="saida">Saída</option>
@@ -131,7 +133,7 @@
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/meu-pwa/service-worker.js')
+        navigator.serviceWorker.register('service-worker.js')
           .then(reg => console.log('✅ Service Worker registrado:', reg.scope))
           .catch(err => console.error('❌ Erro ao registrar Service Worker:', err));
       });
@@ -139,6 +141,7 @@
   </script>
 
   <script>
+    const { jsPDF } = window.jspdf;
     let movimentacoes = [];
     let editIndex = null;
     let currentUser = null;
@@ -199,7 +202,10 @@
     }
 
     function saveMovimentacoes() {
-      const userData = {pass: JSON.parse(localStorage.getItem('user_' + currentUser)).pass, movs: movimentacoes};
+      const userData = {
+        pass: JSON.parse(localStorage.getItem('user_' + currentUser)).pass,
+        movs: movimentacoes
+      };
       localStorage.setItem('user_' + currentUser, JSON.stringify(userData));
     }
 
@@ -311,6 +317,7 @@
       doc.save('movimentacoes.pdf');
     }
   </script>
-</body>
 
-</html>
+</body>
+     </html>
+ 
